@@ -4,6 +4,7 @@ pd.options.display.max_columns = None
 
 sample_df = pd.read_excel('./files/sample.xlsx')
 cms_df = pd.read_excel('./files/20230302233836BC.xlsx')
+align_col = 'BC Code'
 
 def export_duplicated_rows(df, duplicated_key_list):
     duplicated = df[df.duplicated(keep=False,subset=duplicated_key_list )]
@@ -15,14 +16,14 @@ def drop_duplicated_rows(df, duplicated_key_list):
     return df.drop_duplicates(keep='first')
 
 # 查重
-export_duplicated_rows(sample_df, ['BC Code'])
+export_duplicated_rows(sample_df, [align_col])
 
 # 去重
-sample_df = drop_duplicated_rows(sample_df, ['BC Code'])
-cms_df = drop_duplicated_rows(cms_df, ['BC Code'])
+sample_df = drop_duplicated_rows(sample_df, [align_col])
+cms_df = drop_duplicated_rows(cms_df, [align_col])
 
 # 所有行并集：bc code
-whole_indexs = list(set(set(sample_df['BC Code']).union(set(cms_df['BC Code']))))
+whole_indexs = list(set(set(sample_df[align_col]).union(set(cms_df[align_col]))))
 print(f'总行数: {len(whole_indexs)}')
 # 所有列并集
 whole_cols = list(set(set(sample_df.columns).union(set(cms_df.columns))))
@@ -30,12 +31,12 @@ print(f'总列数: {len(whole_cols)}')
 
 # 拉齐行和列
 sample_df = pd.DataFrame(sample_df, columns=whole_cols)
-sample_df.set_index('BC Code', inplace=True)
+sample_df.set_index(align_col, inplace=True)
 sample_df = sample_df.reindex(whole_indexs)
 
 # 拉齐行和列
 cms_df = pd.DataFrame(cms_df, columns=whole_cols)
-cms_df.set_index('BC Code', inplace=True)
+cms_df.set_index(align_col, inplace=True)
 cms_df = cms_df.reindex(whole_indexs)
 
 # 比较
