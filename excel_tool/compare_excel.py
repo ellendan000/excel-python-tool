@@ -28,15 +28,17 @@ print(f'总行数: {len(whole_indexs)}')
 whole_cols = list(set(set(sample_df.columns).union(set(cms_df.columns))))
 print(f'总列数: {len(whole_cols)}')
 
+# 拉齐行和列
 sample_df = pd.DataFrame(sample_df, columns=whole_cols)
 sample_df.set_index('BC Code', inplace=True)
 sample_df = sample_df.reindex(whole_indexs)
 
+# 拉齐行和列
 cms_df = pd.DataFrame(cms_df, columns=whole_cols)
 cms_df.set_index('BC Code', inplace=True)
 cms_df = cms_df.reindex(whole_indexs)
 
-
+# 比较
 target_df = sample_df.compare(cms_df, result_names=('sample', 'cms'))
 
 # 差异的计数器
